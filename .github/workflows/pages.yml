@@ -33,6 +33,7 @@ jobs:
           cp studio/animation.html site/studio/animation.html
           cp studio/level-designer.html site/studio/level-designer.html
           cp studio/character-creator.html site/studio/character-creator.html
+          cp studio/sprite-animation.html site/studio/sprite-animation.html
           cp examples/mini-game/index.html site/game/index.html
           test -s site/index.html
           test -s site/studio/index.html
@@ -40,6 +41,7 @@ jobs:
           test -s site/studio/animation.html
           test -s site/studio/level-designer.html
           test -s site/studio/character-creator.html
+          test -s site/studio/sprite-animation.html
           test -s site/game/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
