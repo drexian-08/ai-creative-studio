@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misi Kutip Bintang — AI Creative Studio</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#0d1426;color:#f4f6ff;font:16px system-ui,sans-serif;display:grid;place-items:center;padding:18px}
+main{width:min(760px,100%);background:#17223a;border:1px solid #344461;border-radius:20px;padding:18px;box-shadow:0 18px 55px #0005}
+h1{font-size:clamp(24px,5vw,36px);margin:0 0 4px}.muted{color:#b5c1d8;margin:0 0 14px}
+.hud{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0;font-weight:700}
+canvas{width:100%;height:auto;display:block;background:#101c32;border:1px solid #40516f;border-radius:14px;touch-action:none}
+.controls{display:flex;justify-content:center;gap:12px;margin:14px auto 4px;max-width:280px}
+.controls button{width:66px;height:54px;font-size:23px}
+button{border:1px solid #586c92;background:#34476b;color:white;border-radius:12px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer}
+button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.help{font-size:13px;color:#c2cce0;text-align:center;margin:12px 0 0}
+</style>
+</head>
+<body><main>
+<h1>⭐ Misi Kutip Bintang</h1>
+<p class="muted">Demo game 2D ringkas — gerakkan watak, kutip bintang dan elak halangan.</p>
+<div class="hud"><span id="score">Bintang: 0 / 8</span><span id="state">Mula permainan!</span></div>
+<canvas id="game" width="720" height="420" aria-label="Permainan mengutip bintang"></canvas>
+<div class="controls" aria-label="Kawalan sentuh">
+<button data-dir="left" aria-label="Kiri">←</button><button data-dir="up" aria-label="Atas">↑</button><button data-dir="down" aria-label="Bawah">↓</button><button data-dir="right" aria-label="Kanan">→</button>
+</div>
+<div class="actions"><button id="start">Mula / Main semula</button><button id="pause">Jeda</button></div>
+<p class="help">Laptop: guna WASD atau anak panah. Telefon: guna butang arah. Kutip 8 bintang!</p>
+</main>
+<script>
+(function(){
+const canvas=document.getElementById("game"),ctx=canvas.getContext("2d");
+const scoreEl=document.getElementById("score"),stateEl=document.getElementById("state");
+const W=canvas.width,H=canvas.height,goal=8;
+let player,stars,blocks,score,running,won,keys={},last=0,raf=0;
+function reset(){
+ player={x:48,y:48,r:15,speed:205};score=0;running=true;won=false;last=0;
+ stars=[];blocks=[{x:170,y:75,w:32,h:185},{x:320,y:190,w:185,h:28},{x:550,y:55,w:28,h:165},{x:90,y:300,w:190,h:25}];
+ for(let i=0;i<goal;i++)stars.push({x:90+(i%4)*165,y:65+Math.floor(i/4)*260,r:9,got:false});
+ scoreEl.textContent="Bintang: 0 / "+goal;stateEl.textContent="Teruskan!";
+ if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+}
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ ctx.strokeStyle="#223452";ctx.lineWidth=1;
+ for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+ for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+ blocks.forEach(b=>{ctx.fillStyle="#62718d";ctx.fillRect(b.x,b.y,b.w,b.h);ctx.strokeStyle="#aebbd2";ctx.strokeRect(b.x,b.y,b.w,b.h)});
+ stars.forEach(s=>{if(s.got)return;ctx.fillStyle="#ffd76b";ctx.beginPath();for(let i=0;i<10;i++){let a=-Math.PI/2+i*Math.PI/5,r=i%2?s.r*.45:s.r;let x=s.x+Math.cos(a)*r,y=s.y+Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill()});
+ ctx.fillStyle="#85d8bd";ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#10283a";ctx.beginPath();ctx.arc(player.x+5,player.y-4,2.4,0,Math.PI*2);ctx.fill();
+}
+function hitRect(x,y,r,b){let cx=Math.max(b.x,Math.min(x,b.x+b.w)),cy=Math.max(b.y,Math.min(y,b.y+b.h));return (x-cx)**2+(y-cy)**2<r*r}
+function update(dt){
+ let dx=(keys.right||keys.d?1:0)-(keys.left||keys.a?1:0),dy=(keys.down||keys.s?1:0)-(keys.up||keys.w?1:0);
+ if(dx&&dy){dx*=.7071;dy*=.7071}
+ let nx=Math.max(player.r,Math.min(W-player.r,player.x+dx*player.speed*dt));
+ let ny=Math.max(player.r,Math.min(H-player.r,player.y+dy*player.speed*dt));
+ if(!blocks.some(b=>hitRect(nx,player.y,player.r,b)))player.x=nx;
+ if(!blocks.some(b=>hitRect(player.x,ny,player.r,b)))player.y=ny;
+ stars.forEach(s=>{if(!s.got&&Math.hypot(player.x-s.x,player.y-s.y)<player.r+s.r){s.got=true;score++;scoreEl.textContent="Bintang: "+score+" / "+goal}});
+ if(score===goal){running=false;won=true;stateEl.textContent="Tahniah! Menang 🎉"}
+}
+function loop(t){if(!running){draw();return}let dt=Math.min((t-(last||t))/1000,.035);last=t;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
+document.addEventListener("keydown",e=>{let k=e.key.toLowerCase();if(["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k))e.preventDefault();keys[k==="arrowup"?"up":k==="arrowdown"?"down":k==="arrowleft"?"left":k==="arrowright"?"right":k]=true});
+document.addEventListener("keyup",e=>{let k=e.key.toLowerCase();keys[k==="arrowup"?"up":k==="arrowdown"?"down":k==="arrowleft"?"left":k==="arrowright"?"right":k]=false});
+document.querySelectorAll("[data-dir]").forEach(b=>{let d=b.dataset.dir;const on=e=>{e.preventDefault();keys[d]=true},off=e=>{e.preventDefault();keys[d]=false};b.addEventListener("pointerdown",on);["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,off))});
+document.getElementById("start").addEventListener("click",reset);
+document.getElementById("pause").addEventListener("click",()=>{if(won)return;running=!running;stateEl.textContent=running?"Teruskan!":"Dijeda";if(running){last=0;raf=requestAnimationFrame(loop)}else if(raf)cancelAnimationFrame(raf)});
+reset();
+})();
+</script></body></html>
