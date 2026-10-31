@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10182b">
+<title>Animation Preview Lab • AI Creative Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#17233b;--line:#354766;--text:#f2f5ff;--muted:#b4c1d8;--accent:#a8b6ff;--mint:#8de0c1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#26395f,#0b1020 60%);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+header,main,footer{max-width:1120px;margin:auto;padding-left:20px;padding-right:20px}header{padding-top:25px;padding-bottom:16px}.back{color:var(--accent);text-decoration:none;display:inline-block;margin-bottom:10px}.tag{color:var(--mint);font-size:12px;font-weight:800;letter-spacing:.13em}h1{font-size:clamp(29px,5vw,44px);line-height:1.1;margin:8px 0}p{color:var(--muted)}
+main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.8fr);gap:16px;padding-bottom:40px}.panel{background:#17233bed;border:1px solid var(--line);border-radius:17px;padding:16px;min-width:0}.panel h2{font-size:17px;margin:0 0 5px}.hint{font-size:13px;color:var(--muted);margin:0 0 13px}
+.stage{background:#091323;border:1px solid #405273;border-radius:13px;overflow:hidden}.stage canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:9px;padding:10px 13px;background:var(--accent);color:#10182b;font:inherit;font-weight:750;cursor:pointer}button.secondary{background:#263752;color:var(--text);border:1px solid #405273}button:disabled{opacity:.4;cursor:not-allowed}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px;color:#dce5f7}select,input[type="text"],input[type="number"]{width:100%;background:#0d1729;color:var(--text);border:1px solid #405273;border-radius:9px;padding:10px;font:inherit}input[type="range"]{width:100%;accent-color:#a8b6ff}input[type="color"]{width:100%;height:40px;background:#0d1729;border:1px solid #405273;border-radius:9px;padding:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.readout{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin-top:5px}.status{min-height:22px;color:var(--mint);font-size:13px;margin-top:10px}.timeline{margin-top:15px;padding:12px;border:1px solid var(--line);background:#101b30;border-radius:12px}.keyrow{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px}.keydots{display:flex;justify-content:space-between;margin-top:5px;color:#8797b5;font-size:11px}.note{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6}
+@media(max-width:780px){main{grid-template-columns:1fr}}@media(max-width:440px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><a class="back" href="../">← Kembali ke AI Creative Studio</a><div class="tag">MOTION PROTOTYPING</div><h1>🎞️ Animation Preview Lab</h1><p>Uji timing dan pergerakan karakter secara terus. Pilih gerakan, ubah kelajuan, scrub timeline dan eksport frame atau tetapan animasi.</p></header>
+<main>
+<section class="panel">
+<h2>Preview pentas</h2><p class="hint">Animasi dijana terus dalam browser menggunakan Canvas 2D.</p>
+<div class="stage"><canvas id="stage" width="960" height="540" aria-label="Pratonton animasi karakter"></canvas></div>
+<div class="toolbar"><button id="play">▶ Main</button><button class="secondary" id="restart">↺ Mula semula</button><button class="secondary" id="png">Simpan frame PNG</button></div>
+<div class="timeline"><div class="keyrow"><strong>Timeline</strong><span id="timeLabel">0.00s / 2.00s</span></div><input id="scrub" type="range" min="0" max="2" step=".01" value="0"><div class="keydots"><span>0s</span><span>25%</span><span>50%</span><span>75%</span><span>2s</span></div></div>
+<div class="status" id="status" role="status"></div>
+</section>
+<aside class="panel">
+<h2>Kawalan animasi</h2><p class="hint">Cuba beberapa preset dan lihat kesan perubahan.</p>
+<label for="motion">Jenis pergerakan</label><select id="motion"><option value="idle">Idle / berdiri</option><option value="walk" selected>Walk / berjalan</option><option value="run">Run / berlari</option><option value="jump">Jump / melompat</option></select>
+<div class="grid"><div><label for="speed">Kelajuan</label><input id="speed" type="range" min=".25" max="2.5" step=".05" value="1"><div class="readout"><span>Perlahan</span><strong id="speedValue">1.00×</strong><span>Pantas</span></div></div><div><label for="duration">Durasi kitaran</label><input id="duration" type="range" min="1" max="5" step=".25" value="2"><div class="readout"><span>1s</span><strong id="durationValue">2.00s</strong><span>5s</span></div></div></div>
+<label for="color">Warna pakaian karakter</label><input id="color" type="color" value="#6fa8ff">
+<label for="background">Latar pentas</label><select id="background"><option value="sunset">Senja</option><option value="day">Siang</option><option value="night">Malam</option><option value="studio">Studio kosong</option></select>
+<div class="toolbar"><button id="export">Eksport tetapan JSON</button><button class="secondary" id="reset">Reset</button></div>
+<p class="note">Nota: Ini ialah preview animasi 2D untuk menguji timing dan pose, bukan renderer 3D atau sistem rig profesional. Fail JSON menyimpan tetapan gerakan, bukan video.</p>
+</aside>
+</main>
+<footer style="max-width:1120px;margin:auto;padding:0 20px 30px;font-size:12px;color:#aebbd1">Animation Preview Lab • Ringan dan berjalan secara lokal. Tiada API key diperlukan.</footer>
+<script>
+(function(){
+const $=id=>document.getElementById(id),canvas=$("stage"),ctx=canvas.getContext("2d");
+let playing=true,t=0,last=0,raf=0;
+const state={motion:"walk",speed:1,duration:2,color:"#6fa8ff",background:"sunset"};
+const TAU=Math.PI*2,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function settings(){state.motion=$("motion").value;state.speed=+$("speed").value;state.duration=+$("duration").value;state.color=$("color").value;state.background=$("background").value;$("speedValue").textContent=state.speed.toFixed(2)+"×";$("durationValue").textContent=state.duration.toFixed(2)+"s";$("scrub").max=state.duration;}
+function line(x1,y1,x2,y2,w,color){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineWidth=w;ctx.lineCap="round";ctx.strokeStyle=color;ctx.stroke();}
+function circle(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=color;ctx.fill();}
+function draw(){
+const w=canvas.width,h=canvas.height,phase=(t/state.duration)*TAU*state.speed,walk=state.motion==="walk"||state.motion==="run",run=state.motion==="run",jump=state.motion==="jump";
+let bg1,bg2,ground,sky;
+if(state.background==="day"){bg1="#75b9e8";bg2="#e2f0fb";ground="#477e55";sky="#e7f4ff";}
+else if(state.background==="night"){bg1="#101b3c";bg2="#28375e";ground="#202f3d";sky="#e8efff";}
+else if(state.background==="studio"){bg1="#182338";bg2="#253652";ground="#34435a";sky="#dce6f7";}
+else{bg1="#dc795d";bg2="#f2c18c";ground="#574b58";sky="#fff0d6";}
+let g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,bg1);g.addColorStop(1,bg2);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+if(state.background!=="studio"){circle(760,125,48,sky);for(let i=0;i<4;i++){ctx.fillStyle=state.background==="night"?"#344568":"#b76f62";ctx.beginPath();ctx.ellipse(120+i*205,355+(i%2)*25,145,75,0,Math.PI,TAU);ctx.fill();}}
+ctx.fillStyle=ground;ctx.fillRect(0,420,w,120);ctx.fillStyle="#ffffff22";ctx.fillRect(0,420,w,3);
+for(let i=0;i<16;i++){ctx.fillStyle="#ffffff18";ctx.fillRect(i*70,445+(i%3)*18,35,3);}
+const bob=walk?Math.abs(Math.sin(phase*2))*(run?17:8):jump?Math.max(0,Math.sin((t/state.duration)*TAU))*95:Math.sin(phase)*3;
+const stride=walk?Math.sin(phase)*(run?48:32):jump?Math.sin(phase)*9:Math.sin(phase)*3;
+const arm=walk?Math.sin(phase+Math.PI)*(run?42:28):jump?-35:Math.sin(phase)*5;
+const cx=480,base=415-bob-(jump?Math.max(0,Math.sin((t/state.duration)*TAU))*55:0),skin="#e8b58e",outline="#182338",cloth=state.color;
+ctx.save();ctx.translate(cx,base);ctx.scale(1.2,1.2);
+// shadow
+ctx.globalAlpha=clamp(1-bob/130,.25,.7);ctx.fillStyle="#07101d";ctx.beginPath();ctx.ellipse(0,8,48+bob*.15,10,0,0,TAU);ctx.fill();ctx.globalAlpha=1;
+// back leg and front leg
+line(-9,-55,-12+stride,-25,15,outline);line(-12+stride,-25,-20+stride*1.35,0,13,outline);line(-20+stride*1.35,0,-5+stride*1.35,0,9,"#d9e3f3");
+line(9,-55,12-stride,-25,15,outline);line(12-stride,-25,20-stride*1.35,0,13,outline);line(20-stride*1.35,0,34-stride*1.35,0,9,"#d9e3f3");
+// torso
+ctx.fillStyle=cloth;ctx.beginPath();ctx.roundRect(-25,-132,50,82,14);ctx.fill();ctx.strokeStyle=outline;ctx.lineWidth=4;ctx.stroke();
+// arms
+line(-22,-119,-31-arm*.3,-83,13,outline);line(-31-arm*.3,-83,-25-arm*.6,-60,10,skin);
+line(22,-119,31+arm*.3,-83,13,outline);line(31+arm*.3,-83,25+arm*.6,-60,10,skin);
+// neck and head
+ctx.fillStyle=skin;ctx.fillRect(-8,-148,16,20);circle(0,-169,27,skin);
+ctx.fillStyle="#27334b";ctx.beginPath();ctx.arc(0,-176,27,Math.PI,TAU);ctx.lineTo(26,-168);ctx.quadraticCurveTo(8,-188,-15,-174);ctx.fill();
+circle(9,-169,2.5,"#1d2738");line(8,-157,16,-156,2,"#9a5c51");
+ctx.restore();
+// captions
+ctx.fillStyle="#ffffffcc";ctx.font="bold 22px system-ui";ctx.textAlign="center";ctx.fillText(state.motion.toUpperCase()+"  •  "+state.speed.toFixed(2)+"×",480,55);
+ctx.fillStyle="#ffffff99";ctx.font="16px system-ui";ctx.fillText("AI CREATIVE STUDIO — MOTION TEST",480,83);
+}
+function updateUI(){const d=state.duration;$("scrub").value=t;$("timeLabel").textContent=t.toFixed(2)+"s / "+d.toFixed(2)+"s";}
+function frame(now){if(!playing)return;if(!last)last=now;const dt=Math.min((now-last)/1000,.05);last=now;t+=dt;if(t>state.duration)t%=state.duration;draw();updateUI();raf=requestAnimationFrame(frame);}
+function start(){cancelAnimationFrame(raf);last=0;playing=true;$("play").textContent="Ⅱ Pause";raf=requestAnimationFrame(frame);}
+function pause(){playing=false;cancelAnimationFrame(raf);$("play").textContent="▶ Main";}
+$("play").addEventListener("click",()=>playing?pause():start());
+$("restart").addEventListener("click",()=>{t=0;draw();updateUI();if(!playing)pause();});
+$("scrub").addEventListener("input",()=>{t=+$("scrub").value;draw();updateUI();});
+["motion","speed","duration","color","background"].forEach(id=>$(id).addEventListener("input",()=>{settings();t=clamp(t,0,state.duration);draw();updateUI();}));
+$("png").addEventListener("click",()=>{const a=document.createElement("a");a.download="animation-frame.png";a.href=canvas.toDataURL("image/png");a.click();$("status").textContent="Frame PNG berjaya disediakan.";});
+$("export").addEventListener("click",()=>{const data={tool:"AI Creative Studio Animation Preview Lab",version:1,...state,exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="animation-settings.json";a.click();URL.revokeObjectURL(url);$("status").textContent="Tetapan animasi dieksport sebagai JSON.";});
+$("reset").addEventListener("click",()=>{$("motion").value="walk";$("speed").value=1;$("duration").value=2;$("color").value="#6fa8ff";$("background").value="sunset";settings();t=0;draw();updateUI();$("status").textContent="Tetapan asal dipulihkan.";});
+settings();draw();updateUI();start();
+})();
+</script></body></html>
