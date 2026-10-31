@@ -1,49 +1,67 @@
 # AI Creative Studio
 
-A practical, agent-agnostic creative production toolkit for building realistic games, polished animation, edited videos, and child-friendly educational media.
+**A beginner-friendly creative workshop powered by AI agents.** Use it to plan and create games, smooth animation, edited videos, storyboards, and safe educational content for children.
 
-## Agent support
+You do not need to know everything about coding or production. Start with an idea and ask your AI agent to guide you one small step at a time.
 
-Skills are mirrored in the project skill locations used by:
+## Start here
+
+1. Open this repository in your AI coding assistant (Codex, Claude Code, or GitHub Copilot).
+2. Open [START-HERE.md](docs/START-HERE.md).
+3. Tell the assistant what you want to create. You can copy one of the prompts from [prompt-library.md](docs/prompt-library.md).
+4. Ask it to create a brief and a small first prototype before making a huge project.
+
+## What is included?
+
+### Production skills
+| Skill | Use it for |
+|---|---|
+| `realistic-game-development` | Realistic game planning, systems, environments, and prototypes |
+| `game-animation` | Character movement, locomotion, blending, and animation polish |
+| `3d-animation-production` | 3D scenes, rigging, cameras, lighting, and rendering |
+| `video-editing` | Editing, pacing, captions, sound, and export |
+| `kids-educational-content` | Safe, age-appropriate educational stories and lessons |
+| `storyboard-and-shot-planning` | Storyboards, shot lists, camera plans, and continuity |
+| `character-and-world-design` | Original characters, environments, props, and art direction |
+| `creative-quality-review` | Quality, accessibility, safety, performance, and delivery review |
+
+### Agent support
+Skills are mirrored in:
 - OpenAI Codex: `.agents/skills/`
 - Claude Code: `.claude/skills/`
 - GitHub Copilot: `.github/skills/`
 
-Each skill is a self-contained directory with a `SKILL.md`. The instructions are intentionally tool-aware but engine/editor-neutral: the agent should inspect the actual project and installed tools before choosing an implementation.
+Repository-wide instructions are in `AGENTS.md`, `CLAUDE.md`, and `.github/copilot-instructions.md`.
 
-## Skill library
+### Production tools
+- [Production pipeline](docs/production-pipeline.md) — idea to final delivery.
+- [Prompt library](docs/prompt-library.md) — ready-to-copy prompts.
+- [Creative brief template](templates/creative-brief.md).
+- [Storyboard template](templates/storyboard.md).
+- [New project generator](scripts/new_project.py) — creates a tidy folder structure.
 
-| Skill | Use it for |
-|---|---|
-| `realistic-game-development` | Game architecture, believable worlds, gameplay systems, and production workflows |
-| `game-animation` | Responsive character movement, locomotion, transitions, and animation polish |
-| `3d-animation-production` | 3D scenes, rigging, lighting, rendering, and efficient animation pipelines |
-| `video-editing` | Editing plans, pacing, transitions, captions, audio, and export |
-| `kids-educational-content` | Safe, age-appropriate educational stories, lessons, and interactive content |
-| `storyboard-and-shot-planning` | Visual storytelling, shot lists, camera language, and production-ready storyboards |
-| `character-and-world-design` | Cohesive characters, environments, props, and visual direction |
-| `creative-quality-review` | QA for visual quality, continuity, accessibility, performance, and delivery |
+## Create a project folder
 
-## Working principles
+Install Python 3 if it is not already installed. From the repository folder, run:
 
-1. Inspect the repository and identify its engine, frameworks, assets, and constraints before editing.
-2. Prefer a small working prototype over a large untested implementation.
-3. Make visuals purposeful: clear silhouettes, readable motion, consistent lighting, and coherent art direction.
-4. For children, prioritize safety, clarity, kindness, inclusion, and learning outcomes.
-5. Respect licensing and provenance. Do not imitate protected characters, logos, or living artists' styles.
-6. Verify the result with available tests, previews, renders, or reproducible manual checks.
-7. Be resource-aware. Prefer scalable workflows, proxies, baked lighting, LODs, and efficient assets when hardware is limited.
+```bash
+python scripts/new_project.py "My First Game" --type game
+```
+
+Other supported types: `3d-animation`, `2d-animation`, `video`, `education`, and `other`.
 
 ## Hardware-aware defaults
 
-When the user's machine is modest (for example, integrated graphics and 8 GB RAM), avoid assuming heavy real-time ray tracing, high-poly scenes, or large local AI models. Offer lightweight settings and cloud/render-farm alternatives only when appropriate. Never promise a target frame rate without measuring it.
+The intended workflow is friendly to modest hardware, including a Ryzen 3 7320U, Radeon 610M integrated graphics, 8 GB RAM, and 512 GB SSD. Start with small scenes, low-resolution previews, compressed textures, simple lighting, proxies, and short renders. Do not assume large local AI models or demanding real-time graphics will run well. Use cloud services only after checking cost and privacy implications.
 
-## How to use
+## Important principles
 
-Ask an agent to perform a task naturally, for example:
-- "Build a small realistic third-person game prototype."
-- "Polish the character's run, jump, and landing animations."
-- "Create a 30-second educational video for primary-school children."
-- "Review this scene for visual consistency and performance."
+- Build a small working prototype before scaling up.
+- Keep editable source files separate from final exports.
+- Track asset sources and licenses.
+- For children's content, prioritize safety, clarity, inclusion, and learning.
+- Do not claim a render, test, or export succeeded unless it was actually verified.
 
-The agent should select the matching skill automatically where supported, or you can explicitly invoke its skill name.
+## License
+
+No blanket license is granted for third-party assets added by users. Check each asset's license and attribution requirements before distribution.
