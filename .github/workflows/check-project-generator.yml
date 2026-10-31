@@ -1,0 +1,29 @@
+name: Check project generator
+
+on:
+  push:
+    paths:
+      - "scripts/**"
+      - "templates/**"
+      - ".github/workflows/check-project-generator.yml"
+  pull_request:
+    paths:
+      - "scripts/**"
+      - "templates/**"
+      - ".github/workflows/check-project-generator.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Compile generator
+        run: python -m py_compile scripts/new_project.py
+      - name: Create sample project
+        run: |
+          python scripts/new_project.py "CI Sample Project" --type video --output /tmp/creative-studio-check
+          test -f "/tmp/creative-studio-check/ci-sample-project/brief.md"
+          test -f "/tmp/creative-studio-check/ci-sample-project/README.md"
