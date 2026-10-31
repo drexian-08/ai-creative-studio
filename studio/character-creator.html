@@ -1,0 +1,46 @@
+<!doctype html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10182b"><title>Character Creator • AI Creative Studio</title><style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#26395f,#0b1020 65%);color:#f2f5ff;font:15px/1.5 system-ui,sans-serif}header,main,footer{max-width:1050px;margin:auto;padding:18px}header{padding-top:24px}.back{color:#a8b6ff;text-decoration:none}.tag{color:#8de0c1;font-size:12px;font-weight:800;letter-spacing:.12em}h1{font-size:clamp(28px,5vw,42px);margin:8px 0}p{color:#b4c1d8}.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:#17233b;border:1px solid #354766;border-radius:16px;padding:15px;min-width:0}.panel h2{font-size:17px;margin:0 0 8px}.preview{background:#101b30;border:1px solid #405273;border-radius:12px;overflow:hidden}.preview canvas{display:block;width:100%;height:auto}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px;color:#dce5f7}select,input{width:100%;padding:9px;background:#0d1729;color:#f2f5ff;border:1px solid #405273;border-radius:8px;font:inherit}input[type=color]{height:40px;padding:3px}button{border:0;border-radius:9px;padding:10px 13px;background:#a8b6ff;color:#10182b;font-weight:750;font:inherit;cursor:pointer}.secondary{background:#263752;color:#f2f5ff;border:1px solid #405273}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.hint{font-size:12px;color:#b4c1d8}.status{font-size:13px;color:#8de0c1;min-height:20px;margin-top:8px}@media(max-width:740px){.layout{grid-template-columns:1fr}}
+</style></head><body><header><a class="back" href="../">← Kembali ke AI Creative Studio</a><div class="tag">CHARACTER DESIGN TOOL</div><h1>🧑‍🎨 Character Creator</h1><p>Reka karakter 2D ringkas untuk game dan animasi. Pilih gaya rambut, pakaian, warna dan aksesori. Muat turun sebagai PNG atau simpan tetapan JSON.</p></header>
+<main class="layout"><section class="panel"><h2>Pratonton karakter</h2><div class="preview"><canvas id="art" width="600" height="650" aria-label="Pratonton karakter 2D"></canvas></div><div class="actions"><button id="png">Muat turun PNG</button><button id="json" class="secondary">Eksport JSON</button></div><div id="status" class="status" role="status"></div></section>
+<section class="panel"><h2>Penyesuaian karakter</h2><label for="name">Nama karakter</label><input id="name" value="Adventurer" maxlength="30">
+<div class="row"><div><label for="skin">Warna kulit</label><select id="skin"><option value="#f1c7a5">Cerah</option><option value="#d99b70">Sawo matang</option><option value="#a96f4e">Coklat</option><option value="#70452f">Gelap</option></select></div><div><label for="hair">Gaya rambut</label><select id="hair"><option value="short">Pendek</option><option value="spiky">Spiky</option><option value="long">Panjang</option><option value="hood">Hood</option><option value="bald">Tiada</option></select></div></div>
+<div class="row"><div><label for="hairColor">Warna rambut</label><input id="hairColor" type="color" value="#302b35"></div><div><label for="eye">Warna mata</label><input id="eye" type="color" value="#263b58"></div></div>
+<div class="row"><div><label for="shirt">Warna pakaian</label><input id="shirt" type="color" value="#467bd1"></div><div><label for="pants">Warna seluar</label><input id="pants" type="color" value="#29364e"></div></div>
+<div class="row"><div><label for="accessory">Aksesori</label><select id="accessory"><option value="none">Tiada</option><option value="glasses">Cermin mata</option><option value="scarf">Skaf</option><option value="cap">Topi</option><option value="headphones">Headphone</option></select></div><div><label for="background">Latar belakang</label><select id="background"><option value="studio">Studio</option><option value="forest">Hutan</option><option value="sunset">Senja</option><option value="night">Malam</option></select></div></div>
+<p class="hint">Nota: Ini pembina karakter 2D asas. Eksport PNG ialah imej karakter; JSON menyimpan pilihan reka bentuk untuk diedit semula.</p><div class="actions"><button class="secondary" id="random">🎲 Rawak</button><button class="secondary" id="reset">Reset</button></div></section></main><footer class="hint">Character Creator • Berjalan dalam browser, tanpa API key atau akaun tambahan.</footer>
+<script>
+(()=>{const $=id=>document.getElementById(id),c=$("art"),x=c.getContext("2d"),ids=["name","skin","hair","hairColor","eye","shirt","pants","accessory","background"];
+const defaults={name:"Adventurer",skin:"#f1c7a5",hair:"short",hairColor:"#302b35",eye:"#263b58",shirt:"#467bd1",pants:"#29364e",accessory:"none",background:"studio"};
+function v(){return Object.fromEntries(ids.map(id=>[id,$(id).value]));}
+function draw(){const s=v(),w=600,h=650;let bg=x.createLinearGradient(0,0,0,h);const bgs={studio:["#1b2c48","#101b30"],forest:["#315b4c","#172f2b"],sunset:["#df936d","#59405d"],night:["#111b3c","#26365a"]};bg.addColorStop(0,bgs[s.background][0]);bg.addColorStop(1,bgs[s.background][1]);x.fillStyle=bg;x.fillRect(0,0,w,h);
+if(s.background!=="studio"){x.fillStyle="#ffffff18";for(let i=0;i<6;i++){x.beginPath();x.arc(60+i*100,120+(i%2)*35,35,0,Math.PI*2);x.fill();}}
+x.fillStyle="#080e1b55";x.beginPath();x.ellipse(300,590,125,20,0,0,Math.PI*2);x.fill();
+const skin=s.skin, hair=s.hairColor, shirt=s.shirt, pants=s.pants;
+function round(px,py,pw,ph,r,color){x.fillStyle=color;x.beginPath();x.roundRect(px,py,pw,ph,r);x.fill();}
+function line(ax,ay,bx,by,width,color){x.strokeStyle=color;x.lineWidth=width;x.lineCap="round";x.beginPath();x.moveTo(ax,ay);x.lineTo(bx,by);x.stroke();}
+ // legs and boots
+round(238,440,52,105,18,pants);round(310,440,52,105,18,pants);round(226,525,70,28,12,"#202a3b");round(304,525,70,28,12,"#202a3b");
+ // body and arms
+round(220,280,160,185,38,shirt);line(230,305,184,420,33,shirt);line(370,305,416,420,33,shirt);x.fillStyle=skin;x.beginPath();x.arc(182,430,17,0,Math.PI*2);x.fill();x.beginPath();x.arc(418,430,17,0,Math.PI*2);x.fill();
+ // neck/head
+round(274,245,52,65,15,skin);x.fillStyle=skin;x.beginPath();x.ellipse(300,190,83,102,0,0,Math.PI*2);x.fill();
+ // hair base and style
+if(s.hair!=="bald"&&s.hair!=="hood"){x.fillStyle=hair;x.beginPath();x.ellipse(300,125,85,52,0,Math.PI,Math.PI*2);x.fill();if(s.hair==="spiky"){for(let i=0;i<7;i++){x.beginPath();x.moveTo(230+i*20,128);x.lineTo(238+i*20,70+(i%2)*12);x.lineTo(253+i*20,130);x.fill();}}if(s.hair==="long"){round(218,125,28,190,15,hair);round(354,125,28,190,15,hair);}if(s.hair==="short"){round(225,112,28,55,12,hair);round(347,112,28,55,12,hair);}}
+if(s.hair==="hood"){x.strokeStyle=hair;x.lineWidth=28;x.beginPath();x.arc(300,185,95,Math.PI,Math.PI*2);x.stroke();round(213,183,25,95,12,hair);round(362,183,25,95,12,hair);}
+ // ears and face
+x.fillStyle=skin;x.beginPath();x.arc(218,196,16,0,Math.PI*2);x.arc(382,196,16,0,Math.PI*2);x.fill();
+x.fillStyle=s.eye;x.beginPath();x.ellipse(270,190,7,11,0,0,Math.PI*2);x.ellipse(330,190,7,11,0,0,Math.PI*2);x.fill();
+line(284,235,316,235,4,"#a65f59");
+if(s.accessory==="glasses"){x.strokeStyle="#1b273b";x.lineWidth=5;x.strokeRect(247,175,45,32);x.strokeRect(308,175,45,32);line(292,188,308,188,4,"#1b273b");}
+if(s.accessory==="scarf"){round(245,270,110,32,12,"#d95d64");line(340,286,365,345,13,"#d95d64");}
+if(s.accessory==="cap"){round(224,93,152,23,10,"#c45d4f");round(258,55,85,48,18,"#c45d4f");}
+if(s.accessory==="headphones"){x.strokeStyle="#202a3b";x.lineWidth=13;x.beginPath();x.arc(300,178,97,Math.PI,Math.PI*2);x.stroke();round(202,170,25,55,9,"#65728a");round(373,170,25,55,9,"#65728a");}
+x.fillStyle="#ffffff";x.textAlign="center";x.font="bold 25px system-ui";x.fillText(s.name||"Character",300,620);
+}
+ids.forEach(id=>$(id).addEventListener("input",draw));
+$("png").onclick=()=>{const a=document.createElement("a");a.download=(v().name||"character").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png";a.href=c.toDataURL("image/png");a.click();$("status").textContent="PNG karakter berjaya dimuat turun.";};
+$("json").onclick=()=>{const blob=new Blob([JSON.stringify({format:"ai-creative-studio-character",version:1,...v()},null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="character-design.json";a.click();URL.revokeObjectURL(url);$("status").textContent="Tetapan karakter dieksport.";};
+$("random").onclick=()=>{const pick=(a)=>a[Math.floor(Math.random()*a.length)];$("skin").value=pick(["#f1c7a5","#d99b70","#a96f4e","#70452f"]);$("hair").value=pick(["short","spiky","long","hood","bald"]);$("hairColor").value=pick(["#302b35","#171717","#8b4a32","#d4ad42","#d8dce5"]);$("eye").value=pick(["#263b58","#39836b","#65402c"]);$("shirt").value=pick(["#467bd1","#d95d64","#4c9b79","#bd914c","#754eaa"]);$("pants").value=pick(["#29364e","#45515f","#624a3b"]);$("accessory").value=pick(["none","glasses","scarf","cap","headphones"]);draw();$("status").textContent="Rekaan rawak dijana."};
+$("reset").onclick=()=>{ids.forEach(id=>$(id).value=defaults[id]);draw();$("status").textContent="Tetapan asal dipulihkan.";};draw();
+})();
+</script></body></html>
