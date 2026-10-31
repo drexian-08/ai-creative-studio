@@ -1,5 +1,4 @@
 name: Deploy AI Creative Studio to GitHub Pages
-
 on:
   push:
     branches: ["main"]
@@ -9,22 +8,18 @@ on:
       - "examples/mini-game/index.html"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Prepare website
         run: |
           mkdir -p site/studio site/game
@@ -34,21 +29,14 @@ jobs:
           cp studio/level-designer.html site/studio/level-designer.html
           cp studio/character-creator.html site/studio/character-creator.html
           cp studio/sprite-animation.html site/studio/sprite-animation.html
+          cp studio/game-builder.html site/studio/game-builder.html
           cp examples/mini-game/index.html site/game/index.html
           test -s site/index.html
-          test -s site/studio/index.html
-          test -s site/studio/storyboard.html
-          test -s site/studio/animation.html
-          test -s site/studio/level-designer.html
-          test -s site/studio/character-creator.html
-          test -s site/studio/sprite-animation.html
-          test -s site/game/index.html
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+          test -s site/studio/game-builder.html
+      - uses: actions/configure-pages@v5
         with:
           enablement: true
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: site
   deploy:
