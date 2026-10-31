@@ -5,7 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "site/**"
-      - "studio/index.html"
+      - "studio/**"
       - "examples/mini-game/index.html"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
@@ -29,9 +29,11 @@ jobs:
         run: |
           mkdir -p site/studio site/game
           cp studio/index.html site/studio/index.html
+          cp studio/storyboard.html site/studio/storyboard.html
           cp examples/mini-game/index.html site/game/index.html
           test -s site/index.html
           test -s site/studio/index.html
+          test -s site/studio/storyboard.html
           test -s site/game/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
