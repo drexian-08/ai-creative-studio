@@ -1,15 +1,17 @@
-name: Check project generator
+name: Check Creative Studio
 
 on:
   push:
     paths:
       - "scripts/**"
       - "templates/**"
+      - "studio/**"
       - ".github/workflows/check-project-generator.yml"
   pull_request:
     paths:
       - "scripts/**"
       - "templates/**"
+      - "studio/**"
       - ".github/workflows/check-project-generator.yml"
 
 jobs:
@@ -20,8 +22,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Compile generator
-        run: python -m py_compile scripts/new_project.py
+      - name: Compile helper scripts
+        run: |
+          python -m py_compile scripts/new_project.py
+          python -m py_compile scripts/check_studio.py
+      - name: Check offline dashboard
+        run: python scripts/check_studio.py
       - name: Create sample project
         run: |
           python scripts/new_project.py "CI Sample Project" --type video --output /tmp/creative-studio-check
