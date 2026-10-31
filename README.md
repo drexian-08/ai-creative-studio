@@ -4,7 +4,7 @@
 
 You do not need to know everything about coding or production. Start with an idea and ask your AI agent to guide you one small step at a time.
 
-## Open the Studio dashboard
+## Try the first playable game\n\nA simple 2D browser prototype is available at [Misi Kutip Bintang](examples/mini-game/index.html). Open the HTML file in a browser to play.\n\n## Publish the Studio as a website\n\nA GitHub Pages deployment workflow is included. It needs a one-time Pages setting by a repository owner; follow [publish-website.md](docs/publish-website.md).\n\n## Open the Studio dashboard
 
 The first offline dashboard is at [studio/index.html](studio/index.html). Download the repository ZIP, extract it, and open that file in Chrome or Edge. See [dashboard instructions](studio/README.md). It builds a project brief and prompt locally; it does not generate media by itself yet.
 
