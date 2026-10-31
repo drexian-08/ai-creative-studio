@@ -4,6 +4,10 @@
 
 You do not need to know everything about coding or production. Start with an idea and ask your AI agent to guide you one small step at a time.
 
+## Open the Studio dashboard
+
+The first offline dashboard is at [studio/index.html](studio/index.html). Download the repository ZIP, extract it, and open that file in Chrome or Edge. See [dashboard instructions](studio/README.md). It builds a project brief and prompt locally; it does not generate media by itself yet.
+
 ## Start here
 
 1. Open this repository in your AI coding assistant (Codex, Claude Code, or GitHub Copilot).
