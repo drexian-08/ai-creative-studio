@@ -30,9 +30,11 @@ jobs:
           cp studio/character-creator.html site/studio/character-creator.html
           cp studio/sprite-animation.html site/studio/sprite-animation.html
           cp studio/game-builder.html site/studio/game-builder.html
+          cp studio/3d-world-builder.html site/studio/3d-world-builder.html
           cp examples/mini-game/index.html site/game/index.html
           test -s site/index.html
           test -s site/studio/game-builder.html
+          test -s site/studio/3d-world-builder.html
       - uses: actions/configure-pages@v5
         with:
           enablement: true
