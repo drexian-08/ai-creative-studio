@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>AI Creative Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#141c30;--panel2:#1b2740;--line:#2c3954;--text:#edf2ff;--muted:#a9b6ce;--accent:#8b9cff;--good:#71d6b0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2a49 0,#0b1020 48%);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{max-width:1100px;margin:auto;padding:34px 22px 18px}header .tag{color:var(--good);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase}h1{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:10px 0}header p{color:var(--muted);max-width:700px;margin:0}
+main{max-width:1100px;margin:auto;padding:12px 22px 60px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.panel{background:linear-gradient(160deg,rgba(27,39,64,.96),rgba(18,27,46,.98));border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 14px 45px #0003}
+.panel h2{font-size:19px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+label{display:block;font-size:13px;color:#d7e0f4;font-weight:650;margin:13px 0 6px}
+input,textarea,select{width:100%;border:1px solid #3b4a68;background:#0e1729;color:var(--text);border-radius:10px;padding:11px 12px;font:inherit;outline:none}
+textarea{min-height:105px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #8b9cff22}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.types{display:flex;flex-wrap:wrap;gap:8px}
+.type{border:1px solid var(--line);background:#101a2d;color:var(--muted);padding:9px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:13px}
+.type[aria-pressed=true]{background:#35416b;border-color:var(--accent);color:white}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+button{border:0;border-radius:10px;padding:11px 15px;background:var(--accent);color:#0b1020;font-weight:750;cursor:pointer;font:inherit}
+button.secondary{background:#263550;color:var(--text);border:1px solid #3b4a68}button:focus-visible{outline:3px solid white;outline-offset:2px}
+.output{min-height:300px;background:#0b1425;border:1px solid var(--line);border-radius:12px;padding:15px;white-space:pre-wrap;overflow-wrap:anywhere;color:#dce6fa;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.status{min-height:22px;color:var(--good);font-size:13px;margin-top:9px}.steps{display:grid;gap:10px;margin-top:14px}
+.step{display:flex;gap:12px;align-items:flex-start;background:#111c30;border:1px solid var(--line);border-radius:12px;padding:12px}
+.num{width:27px;height:27px;flex:0 0 27px;border-radius:50%;display:grid;place-items:center;background:#35416b;color:white;font-weight:800}
+.step strong{display:block}.step span{color:var(--muted);font-size:13px}
+footer{max-width:1100px;margin:auto;padding:0 22px 35px;color:var(--muted);font-size:12px}
+a{color:#b8c4ff}
+@media(max-width:780px){main{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.grid{grid-template-columns:1fr}header{padding-top:25px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">AI-powered creative workspace</div>
+  <h1>AI Creative Studio</h1>
+  <p>Daripada idea kosong kepada brief, storyboard dan arahan kerja untuk AI. Isi beberapa perkara, kemudian salin prompt yang terhasil ke Codex, Claude atau Copilot.</p>
+</header>
+<main>
+<section class="panel">
+  <h2>1. Ceritakan idea kau</h2>
+  <p class="sub">Tak perlu istilah teknikal. Tulis macam biasa dalam Bahasa Melayu pun boleh.</p>
+  <label>Jenis projek</label>
+  <div class="types" id="types">
+    <button class="type" data-type="game" aria-pressed="true">🎮 Game</button>
+    <button class="type" data-type="3d-animation" aria-pressed="false">🎬 Animasi 3D</button>
+    <button class="type" data-type="2d-animation" aria-pressed="false">✏️ Animasi 2D</button>
+    <button class="type" data-type="video" aria-pressed="false">📹 Video</button>
+    <button class="type" data-type="education" aria-pressed="false">📚 Pendidikan</button>
+  </div>
+  <label for="title">Nama projek</label><input id="title" placeholder="Contoh: Pengembaraan Kampung" value="Projek Pertama Saya">
+  <label for="idea">Idea / apa yang kau nak hasilkan?</label><textarea id="idea" placeholder="Contoh: Game 3D dunia terbuka dengan motosikal, kampung dan bandar kecil..."></textarea>
+  <div class="grid">
+    <div><label for="audience">Sasaran penonton / pemain</label><input id="audience" value="Remaja dan umum"></div>
+    <div><label for="language">Bahasa</label><select id="language"><option>Bahasa Melayu</option><option>English</option><option>Bahasa Melayu + English</option></select></div>
+    <div><label for="duration">Tempoh / skop</label><input id="duration" value="Prototype kecil dahulu"></div>
+    <div><label for="style">Gaya visual</label><select id="style"><option>Realistik tetapi ringan</option><option>Stylized 3D</option><option>Cartoon / mesra kanak-kanak</option><option>Cinematic</option><option>Minimal dan bersih</option><option>Belum pasti, cadangkan</option></select></div>
+  </div>
+  <label for="constraints">Ciri wajib / perkara yang perlu dielakkan (optional)</label><textarea id="constraints" placeholder="Contoh: percuma, sesuai untuk laptop 8GB RAM, jangan guna aset berhak cipta..."></textarea>
+  <div class="actions"><button id="generate">Bina pelan projek</button><button class="secondary" id="example">Isi contoh</button></div>
+</section>
+<section class="panel">
+  <h2>2. Pelan dan prompt AI</h2>
+  <p class="sub">Hasil ini dijana dalam browser sahaja. Tiada akaun, API key atau bayaran diperlukan.</p>
+  <div class="output" id="output" aria-live="polite">Pelan projek kau akan muncul di sini. Isi idea di sebelah dan tekan “Bina pelan projek”.</div>
+  <div class="actions">
+    <button id="copy">Salin prompt AI</button><button class="secondary" id="download">Muat turun .md</button>
+  </div>
+  <div class="status" id="status" role="status"></div>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div><strong>Brief</strong><span>Tentukan matlamat dan hasil yang nak dicapai.</span></div></div>
+    <div class="step"><div class="num">2</div><div><strong>Storyboard / reka bentuk</strong><span>Susun babak, mekanik atau kandungan.</span></div></div>
+    <div class="step"><div class="num">3</div><div><strong>Prototype kecil</strong><span>Bina satu bahagian yang boleh diuji dahulu.</span></div></div>
+    <div class="step"><div class="num">4</div><div><strong>Semak dan polish</strong><span>Baiki bug, visual, animasi, audio dan prestasi.</span></div></div>
+    <div class="step"><div class="num">5</div><div><strong>Export</strong><span>Simpan fail akhir dan fail projek yang boleh diedit.</span></div></div>
+  </div>
+</section>
+</main>
+<footer>
+  AI Creative Studio • Versi awal offline • Tiada data dihantar ke server. Prompt perlu disalin ke AI assistant pilihan kau untuk mendapatkan bantuan AI sebenar.
+  <br>Repo: <a href="https://github.com/drexian-08/ai-creative-studio">github.com/drexian-08/ai-creative-studio</a>
+</footer>
+<script>
+(function(){
+  var selectedType="game", latest="";
+  var names={game:"Game", "3d-animation":"Animasi 3D","2d-animation":"Animasi 2D",video:"Video",education:"Kandungan pendidikan"};
+  var $=function(id){return document.getElementById(id)};
+  document.querySelectorAll(".type").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      selectedType=btn.dataset.type;
+      document.querySelectorAll(".type").forEach(function(b){b.setAttribute("aria-pressed",String(b===btn));});
+    });
+  });
+  function makePlan(){
+    var title=$("title").value.trim()||"Projek Kreatif";
+    var idea=$("idea").value.trim()||"Bantu saya kembangkan idea ini dengan mencadangkan konsep yang sesuai.";
+    var audience=$("audience").value.trim()||"Umum";
+    var language=$("language").value;
+    var duration=$("duration").value.trim()||"Skop kecil";
+    var style=$("style").value;
+    var constraints=$("constraints").value.trim()||"Tiada dinyatakan; cadangkan pilihan yang selamat dan kos rendah.";
+    var kind=names[selectedType];
+    var plan="# "+title+"\n\n## Creative brief\n- Jenis: "+kind+"\n- Idea: "+idea+"\n- Sasaran: "+audience+"\n- Bahasa: "+language+"\n- Tempoh/skop: "+duration+"\n- Gaya: "+style+"\n- Kekangan: "+constraints+"\n\n## Pelan kerja\n1. **Discover:** semak keperluan, perisian, aset dan tahap kemahiran.\n2. **Plan:** sediakan brief terperinci, storyboard/reka bentuk dan senarai aset.\n3. **Prototype:** bina versi paling kecil yang boleh diuji.\n4. **Produce:** tambah ciri dan aset secara berperingkat.\n5. **Review:** semak fungsi, visual, gerakan, audio, aksesibiliti, keselamatan dan prestasi.\n6. **Deliver:** export, uji fail akhir dan dokumentasikan cara guna.\n";
+    if(selectedType==="game"){
+      plan+="\n## Prototype game pertama\n- Satu kawasan kecil sahaja.\n- Satu karakter/pemain dan satu mekanik utama.\n- Kawalan asas, kamera dan collision yang stabil.\n- Placeholder art dahulu; jangan bina dunia besar sebelum gameplay berfungsi.\n- Semak FPS dan penggunaan RAM pada tetapan rendah.\n";
+    } else if(selectedType==="video"||selectedType==="education"){
+      plan+="\n## Struktur kandungan\n- Hook/pengenalan yang terus menarik perhatian.\n- 2–4 isi atau babak utama.\n- Penutup dengan rumusan atau tindakan seterusnya.\n- Sediakan caption dan pastikan audio jelas.\n- Untuk kanak-kanak: bahasa mudah, fakta tepat, privasi dan keselamatan diutamakan.\n";
+    } else {
+      plan+="\n## Pelan animasi\n- Blocking pergerakan dan kamera dahulu.\n- Uji timing dan pose dalam preview ringkas.\n- Tambah rig, lighting, material dan secondary motion secara berperingkat.\n- Periksa clipping, jitter, foot sliding dan flicker.\n";
+    }
+    var prompt="Saya mahu anda bertindak sebagai penerbit kreatif dan pembantu teknikal untuk projek saya. Saya beginner, jadi terangkan langkah dalam "+language+" yang mudah.\n\n"+plan+"\nTUGAS ANDA:\n1. Periksa repository dan software yang tersedia sebelum memilih teknologi.\n2. Jangan andaikan engine atau editor tertentu. Cadangkan pilihan percuma/ringan dan terangkan sebab.\n3. Pecahkan kerja kepada milestone kecil. Mulakan dengan brief dan prototype minimum yang boleh diuji.\n4. Jangan buat perubahan besar sekaligus atau buang ciri sedia ada.\n5. Berikan fail yang perlu dibuat/diubah dan arahan menjalankannya.\n6. Uji apa yang boleh diuji dan nyatakan dengan jujur perkara yang belum diuji.\n7. Jangan gunakan aset berhak cipta tanpa kebenaran. Jika kandungan untuk kanak-kanak, utamakan keselamatan dan kesesuaian umur.\n\nMulakan dengan milestone pertama sahaja dan tunggu maklum balas saya sebelum skop diperbesarkan.";
+    latest=prompt;
+    $("output").textContent=plan+"\n---\nPROMPT UNTUK AI ASSISTANT\n\n"+prompt;
+    $("status").textContent="Pelan siap. Salin prompt dan tampal ke Codex, Claude atau Copilot.";
+  }
+  $("generate").addEventListener("click",makePlan);
+  $("example").addEventListener("click",function(){
+    $("title").value="Pengembaraan Kampung 3D";
+    $("idea").value="Game 3D kecil tentang seorang remaja menunggang motosikal melalui kampung, jalan raya dan pekan. Saya mahu pergerakan yang smooth dan suasana yang meyakinkan.";
+    $("audience").value="Remaja dan pemain kasual";
+    $("duration").value="Prototype satu kawasan kecil";
+    $("constraints").value="Utamakan software percuma dan prestasi laptop Ryzen 3 7320U, Radeon 610M, RAM 8GB. Jangan gunakan aset tanpa lesen.";
+    selectedType="game";
+    document.querySelectorAll(".type").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.type==="game"));});
+    makePlan();
+  });
+  $("copy").addEventListener("click",async function(){
+    if(!latest){$("status").textContent="Bina pelan dahulu.";return;}
+    try{await navigator.clipboard.writeText(latest);$("status").textContent="Prompt berjaya disalin.";}
+    catch(e){$("status").textContent="Clipboard tidak tersedia. Pilih dan salin teks prompt secara manual.";}
+  });
+  $("download").addEventListener("click",function(){
+    if(!latest){$("status").textContent="Bina pelan dahulu.";return;}
+    var content=$("output").textContent;
+    var blob=new Blob([content],{type:"text/markdown;charset=utf-8"});
+    var url=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=url;a.download=(($("title").value||"creative-project").toLowerCase().replace(/[^a-z0-9]+/g,"-"))+".md";
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    $("status").textContent="Fail Markdown disediakan untuk dimuat turun.";
+  });
+})();
+</script>
+</body>
+</html>
