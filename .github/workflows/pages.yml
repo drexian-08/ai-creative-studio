@@ -32,11 +32,13 @@ jobs:
           cp studio/game-builder.html site/studio/game-builder.html
           cp studio/3d-world-builder.html site/studio/3d-world-builder.html
           cp studio/3d-character-studio.html site/studio/3d-character-studio.html
+          cp studio/terrain-editor.html site/studio/terrain-editor.html
           cp examples/mini-game/index.html site/game/index.html
           test -s site/index.html
           test -s site/studio/game-builder.html
           test -s site/studio/3d-world-builder.html
           test -s site/studio/3d-character-studio.html
+          test -s site/studio/terrain-editor.html
       - uses: actions/configure-pages@v5
         with:
           enablement: true
