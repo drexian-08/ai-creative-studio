@@ -1,4 +1,4 @@
-const CACHE = "glass-home-v1";
+const CACHE = "glass-home-v2";
 const CORE = ["/ai-creative-studio/phone/", "/ai-creative-studio/phone/manifest.webmanifest", "/ai-creative-studio/phone/icon.svg"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))));
 self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))));
