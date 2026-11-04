@@ -5,6 +5,7 @@ on:
     paths:
       - "site/**"
       - "studio/**"
+      - "phone-glass/**"
       - "examples/mini-game/index.html"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
@@ -20,6 +21,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build Liquid Glass phone app
+        working-directory: phone-glass
+        run: |
+          npm install
+          npm run build
+          mkdir -p ../site/phone
+          cp -R dist/. ../site/phone/
       - name: Prepare website
         run: |
           mkdir -p site/studio site/game
