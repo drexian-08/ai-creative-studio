@@ -1,0 +1,14 @@
+{
+  "name": "Glass Home for Galaxy A15",
+  "short_name": "Glass Home",
+  "description": "A Liquid Glass-inspired personal home dashboard.",
+  "start_url": "/ai-creative-studio/phone/",
+  "scope": "/ai-creative-studio/phone/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#10131e",
+  "theme_color": "#10131e",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
